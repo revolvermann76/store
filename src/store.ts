@@ -1,18 +1,28 @@
 import { generateUUID } from "./uuid";
 
+type TStoreOptions = {
+  protect?: {
+    write?: symbol;
+    read?: symbol;
+    delete?: symbol;
+  };
+};
+
 export class Store {
   #name: string;
   #subStores: Store[] = [];
+  #options: TStoreOptions;
 
-  constructor(name?: string) {
+  constructor(name?: string, options?: TStoreOptions) {
     this.#name = name || generateUUID();
+    this.#options = options || {};
   }
 
   get name(): string {
     return this.#name;
   }
 
-  sub(name: string): Store {
+  sub(name: string, options?: TStoreOptions): Store {
     if (!name) {
       return null;
     }
@@ -21,7 +31,7 @@ export class Store {
         return this.#subStores[i];
       }
     }
-    const newStore = new Store(name);
+    const newStore = new Store(name, options);
     this.#subStores.push(newStore);
     return newStore;
   }
@@ -35,8 +45,8 @@ export class Store {
   remove(key: string, token?: symbol) {}
 
   bind(
-    key: string,
-    fn: (newValue: unknown, oldValue: unknown) => void,
+    keys: string[] | string,
+    fn: (values: [unknown, unknown][]) => void,
     token?: symbol,
   ): void {}
 
