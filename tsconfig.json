@@ -1,0 +1,28 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"alwaysStrict": true,
+		"baseUrl": "./",
+		"declaration": true,
+		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"outDir": "./dist",
+		"removeComments": false,
+		"rootDir": "./",
+		"paths": {
+		},
+		"skipLibCheck": false,
+		"sourceMap": false,
+		"moduleResolution": "node",
+		"module": "ES2020",
+		"target": "ES2020",
+		"lib": ["DOM", "ES2020"]
+	},
+	"include": ["./src/**/*.ts"],
+	"exclude": [
+		"./dist/**/*.ts", 
+		"./node_modules/**/*.ts", 
+		"./**/*.stories.ts"
+	]
+}
