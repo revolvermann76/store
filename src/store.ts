@@ -10,7 +10,7 @@ type TStoreOptions = {
 
 export class Store {
   #name: string;
-  #subStores: Store[] = [];
+  #subStores: { [key: string]: Store } = {};
   #options: TStoreOptions;
 
   constructor(name?: string, options?: TStoreOptions) {
@@ -22,17 +22,38 @@ export class Store {
     return this.#name;
   }
 
-  sub(name: string, options?: TStoreOptions): Store {
+  set name(n: string) {
+    // do nothing (intentional)
+  }
+
+  createSubStore(name: string, options?: TStoreOptions): Store {
     if (!name) {
-      return null;
+      throw new Error("createSubStore() storename not given");
     }
-    for (let i = 0; i < this.#subStores.length; i++) {
-      if (this.#subStores[i].name === name) {
-        return this.#subStores[i];
-      }
+
+    if (this.#subStores[name]) {
+      throw new Error("createSubStore() store already exists");
     }
+
     const newStore = new Store(name, options);
-    this.#subStores.push(newStore);
+    this.#subStores[name] = newStore;
+
+    Object.defineProperty(this, name, {
+      /**
+       * returns a sub-store
+       * @param name - then name of the store
+       * @returns
+       */
+      get: (): Store => {
+        return this.#subStores[name] || null;
+      },
+      set: () => {
+        // do nothing (intentional)
+      },
+      enumerable: true,
+      configurable: true,
+    });
+
     return newStore;
   }
 
