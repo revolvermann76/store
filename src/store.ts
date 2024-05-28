@@ -12,6 +12,7 @@ export class Store {
   #name: string;
   #subStores: { [key: string]: Store } = {};
   #options: TStoreOptions;
+  [key: `$${string}`]: Store;
 
   constructor(name?: string, options?: TStoreOptions) {
     this.#name = name || generateUUID();
@@ -38,7 +39,7 @@ export class Store {
     const newStore = new Store(name, options);
     this.#subStores[name] = newStore;
 
-    Object.defineProperty(this, name, {
+    Object.defineProperty(this, `$${name}`, {
       /**
        * returns a sub-store
        * @param name - then name of the store
@@ -63,7 +64,7 @@ export class Store {
     return null;
   }
 
-  remove(key: string, token?: symbol) {}
+  remove(key: string, token?: symbol): void {}
 
   bind(
     keys: string[] | string,
