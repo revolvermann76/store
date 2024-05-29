@@ -1,11 +1,4 @@
-type TPlainObjectProperty =
-  | string
-  | number
-  | boolean
-  | { [x: string]: TPlainObjectProperty }
-  | Array<TPlainObjectProperty>;
-
-type TPlainObject = { [key: string]: TPlainObjectProperty | TPlainObject };
+import { TPlainObject, TPlainObjectProperty } from "./TPlainObject";
 
 /**
  * Schreibt und liest eine Variable unter einem bestimmten Namespace. Ist

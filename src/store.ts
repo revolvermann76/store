@@ -1,4 +1,6 @@
+import { TPlainObjectProperty } from "./TPlainObject";
 import { generateUUID } from "./uuid";
+import { TVault, vault } from "./vault";
 
 type TStoreOptions = {
   protect?: {
@@ -12,11 +14,14 @@ export class Store {
   #name: string;
   #subStores: { [key: string]: Store } = {};
   #options: TStoreOptions;
+  #vault: TVault;
+
   [key: `$${string}`]: Store;
 
   constructor(name?: string, options?: TStoreOptions) {
     this.#name = name || generateUUID();
     this.#options = options || {};
+    this.#vault = vault();
   }
 
   get name(): string {
@@ -58,13 +63,38 @@ export class Store {
     return this.#subStores[name] || null;
   }
 
-  set(key: string, value: unknown, token?: symbol): void {}
-
-  get(key: string, token?: symbol): unknown {
-    return null;
+  set(key: string, value: TPlainObjectProperty, token?: symbol): void {
+    if (
+      this.#options.protect &&
+      this.#options.protect.write &&
+      token !== this.#options.protect.write
+    ) {
+      throw new Error("set - token not given or wrong");
+    }
+    this.#vault.set(key, value);
   }
 
-  remove(key: string, token?: symbol): void {}
+  get(key: string, token?: symbol): unknown {
+    if (
+      this.#options.protect &&
+      this.#options.protect.read &&
+      token !== this.#options.protect.read
+    ) {
+      throw new Error("get - token not given or wrong");
+    }
+    return this.#vault.get(key);
+  }
+
+  remove(key: string, token?: symbol): void {
+    if (
+      this.#options.protect &&
+      this.#options.protect.delete &&
+      token !== this.#options.protect.delete
+    ) {
+      throw new Error("remove - token not given or wrong");
+    }
+    this.#vault.remove(key);
+  }
 
   bind(
     keys: string[] | string,
