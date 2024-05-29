@@ -28,10 +28,6 @@ export class Store {
   }
 
   createSubStore(name: string, options?: TStoreOptions): Store {
-    if (!name) {
-      throw new Error("createSubStore() storename not given");
-    }
-
     if (this.#subStores[name]) {
       throw new Error("createSubStore() store already exists");
     }
@@ -56,6 +52,10 @@ export class Store {
     });
 
     return newStore;
+  }
+
+  subStore(name: string): Store {
+    return this.#subStores[name] || null;
   }
 
   set(key: string, value: unknown, token?: symbol): void {}
