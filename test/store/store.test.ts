@@ -24,7 +24,7 @@ describe("Preset", () => {
     expect(s.get("hallo")).toStrictEqual(["welt"]);
   });
   test("Erzeuge Store ohne Preset", () => {
-    let s = new Store();
+    const s = new Store();
     expect(s.get("")).toStrictEqual({});
   });
   test("Speichere Array im Store", () => {
@@ -36,7 +36,7 @@ describe("Preset", () => {
   });
   test("Übergebe fehlerhaften Wert als Preset", () => {
     expect(() => {
-      new Store(8);
+      new Store(8 as any as {});
     }).toThrow();
   });
 });
@@ -44,7 +44,7 @@ describe("Preset", () => {
 describe("Binding", () => {
   test("initialFire", () => {
     // initialFire
-    let s = new Store({ hallo: "welt" });
+    const s = new Store({ hallo: "welt" });
     expect(s.get("hallo")).toBe("welt");
     let called = false;
     s.bind(
@@ -73,7 +73,7 @@ describe("Binding", () => {
     expect(called3).toBe(true);
   });
   test("Rufe Handler bei Veränderungen im Store", () => {
-    let s1 = new Store({ hallo: "welt", ping: "pong" });
+    const s1 = new Store({ hallo: "welt", ping: "pong" });
     expect(s1.get("hallo")).toBe("welt");
     let result = null;
     s1.bind(
@@ -88,10 +88,10 @@ describe("Binding", () => {
     expect(result).toStrictEqual(["Marc", "pong"]);
   });
   test("Pausiere Binding", () => {
-    let s2 = new Store({ hallo: "welt", ping: "pong" });
+    const s2 = new Store({ hallo: "welt", ping: "pong" });
     expect(s2.get("hallo")).toBe("welt");
     let result = null;
-    let binding = s2.bind(
+    const binding = s2.bind(
       ["hallo", "ping"],
       (results) => {
         result = results;
@@ -109,7 +109,7 @@ describe("Binding", () => {
 
 describe("Raise", () => {
   test("Raise und lower", () => {
-    let s = new Store({ hallo: "welt" });
+    const s = new Store({ hallo: "welt" });
     expect(s.get("hallo")).toBe("welt");
 
     s.raise();
@@ -120,7 +120,7 @@ describe("Raise", () => {
     expect(s.get("hallo")).toBe("welt");
   });
   test("Raise und Settle", () => {
-    let s = new Store({ hallo: "welt" });
+    const s = new Store({ hallo: "welt" });
     s.raise();
     s.set("hallo", "Tarek");
     expect(s.get("hallo")).toBe("Tarek");
@@ -131,7 +131,7 @@ describe("Raise", () => {
     expect(s.raised).toBe(0);
   });
   test("Raise multiple level", () => {
-    let s = new Store({ hallo: "welt" });
+    const s = new Store({ hallo: "welt" });
     s.raise();
     s.raise();
     expect(s.raised).toBe(2);
